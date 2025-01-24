@@ -1,0 +1,241 @@
+{
+    "produtos": [
+        {
+            "id": 1,
+            "nome": "Anel Retro Verde",
+            "categoria": "aneis",
+            "preco": 14.5,
+            "imagem": [
+                "/fotos/Anel-Retro-Verde (1).jpg",
+                "/fotos/Anel-Retro-Verde (2).jpg",
+                "/fotos/Anel-Retro-Verde (3).jpg",
+                "/fotos/Anel-Retro-Verde (4).jpg"
+            ],
+            "descricao": "Anel Retro Verde em prata 925",
+            "tamanhos": ["14"]
+        },
+        {
+            "id": 2,
+            "nome": "Anel Trançado",
+            "categoria": "aneis",
+            "preco": 14.9,
+            "imagem": [
+                "/fotos/Anel-Trançado (1).jpg",
+                "/fotos/Anel-Trançado (2).jpg",
+                "/fotos/Anel-Trançado (3).jpg"
+            ],
+            "descricao": "Anel Trançado em prata 925",
+            "tamanhos": ["14"]
+        },
+        {
+            "id": 3,
+            "nome": "Brinco Retangular Cravejado",
+            "categoria": "brincos",
+            "preco": 12.9,
+            "imagem": [
+                "/fotos/Brinco-retangular cravejado (1).jpg",
+                "/fotos/Brinco-retangular cravejado (2).jpg",
+                "/fotos/Brinco-retangular cravejado (3).jpg",
+                "/fotos/Brinco-retangular cravejado (4).jpg"
+            ],
+            "descricao": "Brinco Retangular Cravejado em prata 925",
+            "tamanhos": ["Grande"]
+        },
+        {
+            "id": 5,
+            "nome": "Colar Pérola",
+            "categoria": "colares",
+            "preco": 20.9,
+            "imagem": [
+                "/fotos/Colar- Pérola (1).jpg",
+                "/fotos/Colar- Pérola (2).jpg",
+                "/fotos/Colar- Pérola (3).jpg",
+                "/fotos/Colar- Pérola (4).jpg"
+            ],
+            "descricao": "Colar Pérola em prata 925",
+            "tamanhos": ["40cm"]
+        },
+        {
+            "id": 6,
+            "nome": "Colar Butterfy",
+            "categoria": "colares",
+            "preco": 18.0,
+            "imagem": [
+                "/fotos/Colar-Butterfy (1).jpg",
+                "/fotos/Colar-Butterfy (2).jpg",
+                "/fotos/Colar-Butterfy.jpg"
+            ],
+            "descricao": "Colar Butterfy em prata 925",
+            "tamanhos": ["40cm"]
+        },
+        {
+            "id": 7,
+            "nome": "Colar Dois Corações",
+            "categoria": "colares",
+            "preco": 19.9,
+            "imagem": [
+                "/fotos/Colar-Dois-Corações (1).jpg",
+                "/fotos/Colar-Dois-Corações (2).jpg"
+            ],
+            "descricao": "Colar Dois Corações em prata 925",
+            "tamanhos": ["40cm"]
+        },
+        {
+            "id": 8,
+            "nome": "Colar Lune",
+            "categoria": "colares",
+            "preco": 19.9,
+            "imagem": [
+                "/fotos/Colar-Lune (1).jpg",
+                "/fotos/Colar-Lune (2).jpg",
+                "/fotos/Colar-Lune (3).jpg",
+                "/fotos/Colar-Lune.jpg"
+            ],
+            "descricao": "Colar Lune em prata 925",
+            "tamanhos": ["40cm"]
+        },
+        {
+            "id": 9,
+            "nome": "Colar Trevo",
+            "categoria": "colares",
+            "preco": 18.0,
+            "imagem": [
+                "/fotos/Colar-Trevo (1).jpg",
+                "/fotos/Colar-Trevo (2).jpg",
+                "/fotos/Colar-Trevo.jpg"
+            ],
+            "descricao": "Colar Trevo em prata 925",
+            "tamanhos": ["40cm"]
+        },
+        {
+            "id": 10,
+            "nome": "Colar Coração Vazado",
+            "categoria": "colares",
+            "preco": 16.5,
+            "imagem": [
+                "/fotos/Colar-coração-vazado (1).jpg",
+                "/fotos/Colar-coração-vazado (2).jpg",
+                "/fotos/Colar-coração-vazado (3).jpg",
+                "/fotos/Colar-coração-vazado (4).jpg"
+            ],
+            "descricao": "Colar Coração Vazado em prata 925",
+            "tamanhos": ["40cm"]
+        },
+        {
+            "id": 11,
+            "nome": "Pulseira Margarida",
+            "categoria": "pulseiras",
+            "preco": 14.9,
+            "imagem": [
+                "/fotos/Pulseira-Margarida (1).jpg",
+                "/fotos/Pulseira-Margarida (2).jpg",
+                "/fotos/Pulseira-Margarida (3).jpg",
+                "/fotos/pulseira-margarida (4).jpg",
+                "/fotos/pulseira-margarida (5).jpg",
+                "/fotos/pulseira-margarida (6).jpg"
+            ],
+            "descricao": "Pulseira Margarida em prata 925",
+            "tamanhos": ["Médio"]
+        },
+        {
+            "id": 12,
+            "nome": "Pulseira Pingo De Luz",
+            "categoria": "pulseiras",
+            "preco": 15.5,
+            "imagem": [
+                "/fotos/Pulseira-Pingo-de-luz (1).jpg",
+                "/fotos/Pulseira-Pingo-de-luz (2).jpg",
+                "/fotos/Pulseira-pingo-de-luz.jpg"
+            ],
+            "descricao": "Pulseira Pingo De Luz em prata 925",
+            "tamanhos": ["Médio"]
+        },
+        {
+            "id": 13,
+            "nome": "Anel V Cravejado",
+            "categoria": "aneis",
+            "preco": 14.9,
+            "imagem": [
+                "/fotos/anel-V-Cravejado (1).jpg",
+                "/fotos/anel-V-Cravejado (2).jpg",
+                "/fotos/anel-V-Cravejado (3).jpg"
+            ],
+            "descricao": "Anel V Cravejado em prata 925",
+            "tamanhos": ["13"]
+        },
+        {
+            "id": 14,
+            "nome": "Mini Caixa de Joias",
+            "categoria": "embalagens",
+            "preco": 5.0,
+            "imagem": [
+                "/fotos/Mini-caixa-Joia (1).jpg",
+                "/fotos/Mini-caixa-Joia (2).jpg",
+                "/fotos/Mini-caixa-Joia (3).jpg",
+                "/fotos/mini-caixa-joia (4).jpg",
+                "/fotos/mini-caixa-joia (5).jpg",
+                "/fotos/mini-caixa-joia (6).jpg",
+                "/fotos/mini-caixa-joia.jpg"
+            ],
+            "tamanhos": ["Único"],
+            "descricao": "caixa de joias mini quadrada com fechadura, estojo de armazenamento de mesa em tecido, formato retangular, fecho de ziper, interior em couro sintetico",
+            "Disponivel": ["48"]
+        },
+        {
+            "id": 15,
+            "nome": "Mini Sacola Branca",
+            "categoria": "embalagens",
+            "preco": 0.70,
+            "imagem": [
+                "/fotos/Mini-sacola-Branca (1).jpg",
+                "/fotos/Mini-sacola-Branca (2).jpg",
+                "/fotos/mini-sacola.jpg"
+            ],
+            "descricao": "Mini sacola de papel para presente 11,5x10",
+            "tamanhos": ["Único"],
+            "Disponivel": ["5"]
+        },
+        {
+            "id": 16,
+            "nome": "Caixa Rosa",
+            "categoria": "embalagens",
+            "preco": 1.5,
+            "imagem": [
+                "/fotos/caixa- rosa- (1).jpg",
+                "/fotos/caixa- rosa- (2).jpg",
+                "/fotos/caixa- rosa- (3).jpg",
+                "/fotos/caixa- rosa- (4).jpg",
+                "/fotos/caixa- rosa- (5).jpg",
+                "/fotos/caixa- rosa- (6).jpg"
+            ],
+            "descricao": "Caixa rosa para joias em papel rígido",
+            "tamanhos": ["Único"],
+            "Disponivel": ["48"]
+        },
+        {
+            "id": 17,
+            "nome": "Caixa Verde",
+            "categoria": "embalagens",
+            "preco": 0.60,
+            "imagem": [
+                "/fotos/Caixa-verde.jpg"
+            ],
+            "descricao": "Caixa verde para joias em papel rígido",
+            "tamanhos": ["Único"],
+            "Disponivel": ["6"]
+        },
+        {
+            "id": 18,
+            "nome": "Bolsa de Veludo",
+            "categoria": "embalagens",
+            "preco": 0.30,
+            "imagem": [
+                "/fotos/bolsa-veludo (1).jpg",
+                "/fotos/bolsa-veludo (2).jpg"
+            ],
+            "descricao": "Bolsa de veludo para joias",
+            "tamanhos": ["Único"],
+            "Disponivel": ["50"]
+        }
+    ]
+}

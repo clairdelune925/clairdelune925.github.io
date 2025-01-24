@@ -1,0 +1,29 @@
+{
+    "categorias": [
+        {
+            "id": "aneis",
+            "nome": "Anéis",
+            "tamanhos": ["13", "14", "15", "16", "17", "18", "19"]
+        },
+        {
+            "id": "brincos",
+            "nome": "Brincos",
+            "tamanhos": ["Pequeno", "Médio", "Grande"]
+        },
+        {
+            "id": "colares",
+            "nome": "Colares",
+            "tamanhos": ["40cm", "45cm", "50cm"]
+        },
+        {
+            "id": "pulseiras",
+            "nome": "Pulseiras",
+            "tamanhos": ["Pequeno", "Médio", "Grande"]
+        },
+        {
+            "id": "embalagens",
+            "nome": "Embalagens",
+            "tamanhos": ["Único", "11,5x10"]
+        }
+    ]
+} 

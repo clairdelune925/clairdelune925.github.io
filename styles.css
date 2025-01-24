@@ -1,0 +1,786 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-black: #000000;
+    --color-gold: #D4AF37;
+    --color-white: #FFFFFF;
+    --color-brown: #8B4513;
+    --color-dark-gold: #B8860B;
+}
+
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    background-color: var(--color-white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-icon {
+    cursor: pointer;
+    font-size: 1.2rem;
+    border-color: var(--color-gold) !important;
+    color: var(--color-gold) !important;
+    margin-right: 0.5rem;
+}
+
+.cart-icon:hover {
+    background-color: var(--color-gold) !important;
+    color: var(--color-black) !important;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.product-card {
+    height: 100%;
+    transition: transform 0.2s;
+    border: 1px solid var(--color-gold);
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+}
+
+.product-card img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin: 0 auto;
+    display: block;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.product-card img:hover {
+    opacity: 0.8;
+}
+
+.product-card button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: var(--color-white);
+    margin: 15% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 500px;
+    border: 2px solid var(--color-gold);
+}
+
+.modal-header {
+    background-color: var(--color-black);
+    color: var(--color-gold);
+    border-bottom: 1px solid var(--color-gold);
+}
+
+.btn-close {
+    filter: invert(1) sepia(1) saturate(5) hue-rotate(30deg);
+}
+
+.btn-primary {
+    background-color: var(--color-gold) !important;
+    border-color: var(--color-dark-gold) !important;
+    color: var(--color-black) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-dark-gold) !important;
+    border-color: var(--color-gold) !important;
+}
+
+.btn-danger {
+    background-color: var(--color-brown) !important;
+    border-color: var(--color-brown) !important;
+}
+
+.btn-success {
+    background-color: var(--color-gold) !important;
+    border-color: var(--color-dark-gold) !important;
+    color: var(--color-black) !important;
+}
+
+.btn-secondary {
+    background-color: var(--color-black) !important;
+    border-color: var(--color-gold) !important;
+    color: var(--color-gold) !important;
+}
+
+.form-select {
+    border-color: var(--color-gold);
+}
+
+.form-select:focus {
+    border-color: var(--color-dark-gold);
+    box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+}
+
+.card-title {
+    color: var(--color-brown);
+}
+
+.modal-title {
+    font-family: 'CMU Serif', serif;
+    font-weight: 600;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--color-brown);
+}
+
+.remove-button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.remove-button:hover {
+    background-color: #cc0000;
+}
+
+.modal.show {
+    display: block;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.navbar {
+    background-color: var(--color-black) !important;
+    border-bottom: 2px solid var(--color-gold);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-family: 'CMU Serif', serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-gold) !important;
+}
+
+.moon-icon {
+    font-size: 1.2em;
+    line-height: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'CMU Serif', serif;
+    color: var(--color-brown);
+}
+
+.card-body {
+    background-color: var(--color-white);
+}
+
+.search-container {
+    position: relative;
+    width: 300px;
+}
+
+.search-container input {
+    padding-right: 40px;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-gold);
+}
+
+.search-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 40px;
+    border: none;
+    background: var(--color-gold);
+    color: var(--color-black);
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-button:hover {
+    background: var(--color-dark-gold);
+}
+
+.sidebar {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-gold);
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.sidebar-section {
+    margin-bottom: 20px;
+}
+
+.sidebar-section h5 {
+    color: var(--color-brown);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-gold);
+}
+
+.list-group-item {
+    border-color: var(--color-gold);
+    color: var(--color-brown);
+    transition: all 0.3s;
+}
+
+.list-group-item:hover {
+    background-color: var(--color-gold);
+    color: var(--color-black);
+}
+
+.list-group-item.active {
+    background-color: var(--color-gold);
+    border-color: var(--color-dark-gold);
+    color: var(--color-black);
+}
+
+.price-filter {
+    padding: 10px;
+}
+
+#priceRange {
+    accent-color: var(--color-gold);
+}
+
+/* Ajustes para o modal de imagem */
+#image-modal .modal-dialog {
+    max-width: 90vw;  /* Limita a largura a 90% da viewport */
+    max-height: 90vh; /* Limita a altura a 90% da viewport */
+    margin: 1rem auto;
+}
+
+#image-modal .modal-content {
+    background-color: var(--color-black);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#image-modal .modal-body {
+    background-color: var(--color-black);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#image-modal img {
+    max-width: 100%;
+    max-height: calc(90vh - 120px); /* Altura máxima considerando header e footer */
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Ajustes para os botões de navegação */
+.btn-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 1rem 0.5rem;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+    z-index: 1;
+}
+
+#modal-tamanho {
+    background-color: var(--color-white);
+    border-color: var(--color-gold);
+}
+
+#modal-tamanho:focus {
+    border-color: var(--color-dark-gold);
+    box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+}
+
+/* Estilos para navegação de imagens */
+.modal-body {
+    position: relative;
+}
+
+.btn-nav:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.prev-image {
+    left: 0;
+    border-radius: 0 5px 5px 0;
+}
+
+.next-image {
+    right: 0;
+    border-radius: 5px 0 0 5px;
+}
+
+/* Esconder botões quando não houver mais imagens */
+.btn-nav.disabled {
+    display: none;
+}
+
+/* Adicionar estilos do footer */
+.footer {
+    background-color: var(--color-black);
+    border-top: 2px solid var(--color-gold);
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+}
+
+.footer a {
+    color: var(--color-gold);
+    transition: color 0.3s;
+}
+
+.footer a:hover {
+    color: var(--color-dark-gold);
+    text-decoration: none;
+}
+
+.footer .text-muted {
+    color: var(--color-gold) !important;
+}
+
+.footer .bi-instagram {
+    font-size: 1.1rem;
+    color: var(--color-gold);
+}
+
+.footer .bi-whatsapp {
+    font-size: 1.1rem;
+    color: var(--color-gold);
+}
+
+main {
+    flex: 1;
+}
+
+/* Estilos para os ícones na navbar */
+.nav-icon {
+    color: var(--color-gold);
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.nav-icon:hover {
+    color: var(--color-dark-gold);
+}
+
+/* Wrapper para compensar a navbar fixa */
+.content-wrapper {
+    padding-top: 80px; /* Ajuste conforme a altura da sua navbar */
+}
+
+/* Ajustes para o sidebar colapsável */
+@media (max-width: 767.98px) {
+    .sidebar {
+        margin-bottom: 1rem;
+    }
+    
+    /* Botão de toggle dos filtros */
+    [data-bs-toggle="collapse"] {
+        background-color: var(--color-gold);
+        color: var(--color-black);
+        border: none;
+        margin-bottom: 1rem;
+    }
+    
+    [data-bs-toggle="collapse"]:hover {
+        background-color: var(--color-dark-gold);
+    }
+    
+    /* Animação suave para o collapse */
+    .collapse {
+        transition: all 0.3s ease;
+    }
+}
+
+/* Garantir que o sidebar fique visível em telas maiores */
+@media (min-width: 768px) {
+    .collapse.d-md-block {
+        display: block !important;
+    }
+}
+
+/* Ajuste no z-index da navbar para garantir que fique sobre outros elementos */
+.navbar.fixed-top {
+    z-index: 1030;
+}
+
+/* Estilos para a seção de brindes */
+.gift-option {
+    background-color: var(--color-white);
+    border-radius: 5px;
+    padding: 1rem;
+}
+
+.gift-option .alert {
+    background-color: var(--color-gold);
+    color: var(--color-black);
+    border: none;
+}
+
+.gift-option .bi-gift {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+}
+
+#giftSelect {
+    border-color: var(--color-gold);
+    margin-top: 0.5rem;
+}
+
+#giftSelect:focus {
+    border-color: var(--color-dark-gold);
+    box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+}
+
+/* Estilos para o modal de cadastro */
+#signup-modal .modal-content {
+    border: 2px solid var(--color-gold);
+}
+
+#signup-modal .modal-header {
+    background-color: var(--color-black);
+    color: var(--color-gold);
+    border-bottom: 1px solid var(--color-gold);
+}
+
+#signup-modal .form-control {
+    border-color: var(--color-gold);
+}
+
+#signup-modal .form-control:focus {
+    border-color: var(--color-dark-gold);
+    box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+}
+
+/* Estilos para validação do telefone */
+#signup-phone.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+#signup-phone.is-valid {
+    border-color: #198754;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}
+
+.is-invalid ~ .invalid-feedback {
+    display: block;
+}
+
+/* Remover as setas do input number */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Ajustar o texto de ajuda */
+.form-text {
+    color: var(--color-dark-gold);
+    font-size: 0.875em;
+    margin-top: 0.25rem;
+}
+
+/* Adicionar efeito de destaque para a seção de produtos */
+@keyframes highlightSection {
+    0% { background-color: transparent; }
+    50% { background-color: rgba(212, 175, 55, 0.1); }
+    100% { background-color: transparent; }
+}
+
+.highlight-section {
+    animation: highlightSection 1.5s ease-in-out;
+}
+
+/* Estilos para os toasts */
+.toast-success {
+    color: white;
+    border-radius: 4px;
+    font-family: sans-serif;
+}
+
+.toast-error {
+    color: white;
+    border-radius: 4px;
+    font-family: sans-serif;
+}
+
+.toast-warning {
+    color: black;
+    border-radius: 4px;
+    font-family: sans-serif;
+}
+
+.toast-info {
+    color: white;
+    border-radius: 4px;
+    font-family: sans-serif;
+}
+
+/* Estilos para o filtro de tamanhos com ícone */
+.size-filter {
+    position: relative;
+}
+
+.size-filter select {
+    padding-left: 35px; /* Espaço para o ícone */
+}
+
+.size-filter::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background-image: url('image.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+}
+
+/* Estilizar as opções do select */
+.size-filter select option {
+    padding-left: 35px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: 20px;
+}
+
+/* Ajustar o tamanho do select */
+#sizeFilter {
+    width: 100%;
+    padding: 8px 12px 8px 35px;
+    border-radius: 4px;
+    border: 1px solid var(--color-gold);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    cursor: pointer;
+}
+
+#sizeFilter:focus {
+    outline: none;
+    border-color: var(--color-dark-gold);
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+}
+
+/* Estilos para o link do guia de tamanhos */
+.size-guide-link {
+    display: inline-block;
+    color: var(--color-dark-gold);
+    text-decoration: none;
+    font-size: 0.9em;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s;
+}
+
+.size-guide-link:hover {
+    color: var(--color-gold);
+    text-decoration: underline;
+}
+
+.size-guide-link .bi-rulers {
+    margin-right: 0.25rem;
+}
+
+/* Ajustar modal do guia de tamanhos */
+#size-guide-modal .modal-body {
+    padding: 0;
+}
+
+#size-guide-modal img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Ajustar estilos para o container do select no modal */
+.size-select-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.size-select-container .size-guide-link {
+    margin-bottom: 0.5rem;
+}
+
+.size-select-container .form-select {
+    width: 100%;
+}
+
+/* Ajustar espaçamento no modal de imagem */
+#image-modal .modal-footer {
+    padding: 1rem;
+}
+
+/* Estilos para os botões de tamanho */
+.tamanhos-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.size-btn {
+    min-width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: 1px solid var(--color-black) !important;
+    background-color: var(--color-white) !important;
+    color: var(--color-black) !important;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.size-btn:hover:not(:disabled) {
+    background-color: var(--color-gold) !important;
+    color: var(--color-black) !important;
+    border-color: var(--color-black) !important;
+}
+
+.size-btn.active {
+    background-color: var(--color-gold) !important;
+    color: var(--color-black) !important;
+    border-color: var(--color-black) !important;
+}
+
+.size-btn:disabled {
+    opacity: 0.7;
+    cursor: default;
+    background-color: var(--color-gold) !important;
+    color: var(--color-black) !important;
+    border-color: var(--color-black) !important;
+}
+
+/* Ajustar espaçamento do guia de tamanhos */
+.size-guide-link {
+    margin-bottom: 1rem;
+}
+
+/* Estilos para navegação mobile */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        background-color: var(--color-black);
+        padding: 1rem;
+        margin: 0 -1rem;
+        border-top: 1px solid var(--color-gold);
+    }
+    
+    .navbar-nav {
+        gap: 0.5rem;
+    }
+    
+    .search-container {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+    
+    .btn-group {
+        width: 100%;
+        display: flex !important;
+    }
+    
+    .btn-group .btn {
+        flex: 1;
+    }
+    
+    .nav-icon {
+        font-size: 1.5rem;
+        padding: 0.5rem;
+    }
+    
+    .cart-icon {
+        width: auto;
+        flex: none;
+    }
+}
+
+/* Ajustar espaçamento do conteúdo principal em mobile */
+@media (max-width: 767.98px) {
+    .content-wrapper {
+        margin-top: 4rem;
+    }
+    
+    .sidebar {
+        margin-bottom: 1rem;
+    }
+} 
