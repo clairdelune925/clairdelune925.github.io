@@ -122,46 +122,54 @@ function adicionarAoCarrinho(produtoId) {
     const produto = produtos.find(p => p.id === produtoId);
     
     if (produto.categoria === 'colares') {
-        // Para colares, adicionar diretamente sem tamanho
         const carrinhoId = `${produtoId}_unico`;
         
         if (carrinho[carrinhoId]) {
-            carrinho[carrinhoId].quantidade++;
+            // Verificar se tem quantidade disponível
+            const novaQuantidade = carrinho[carrinhoId].quantidade + 1;
+            if (produto.Disponivel && novaQuantidade > parseInt(produto.Disponivel[0])) {
+                mostrarNotificacao('Quantidade máxima disponível atingida', 'warning');
+                return;
+            }
+            carrinho[carrinhoId].quantidade = novaQuantidade;
         } else {
             carrinho[carrinhoId] = {
                 ...produto,
-                quantidade: 1
+                quantidade: 1,
+                stockDisponivel: produto.Disponivel ? parseInt(produto.Disponivel[0]) : null
             };
         }
         atualizarContadorCarrinho();
-        mostrarNotificacao('Produto adicionado ao carrinho!', 'success');
         return;
     }
     
-    // Para outros produtos, verificar tamanho
     const tamanhoInput = document.getElementById(`tamanho-${produtoId}`);
     const tamanho = tamanhoInput ? tamanhoInput.value : null;
     
-    // Se tem apenas um tamanho ou já tem tamanho selecionado
     if (tamanho) {
         const carrinhoId = `${produtoId}_${tamanho}`;
         
         if (carrinho[carrinhoId]) {
-            carrinho[carrinhoId].quantidade++;
+            // Verificar se tem quantidade disponível
+            const novaQuantidade = carrinho[carrinhoId].quantidade + 1;
+            if (produto.Disponivel && novaQuantidade > parseInt(produto.Disponivel[0])) {
+                mostrarNotificacao('Quantidade máxima disponível atingida', 'warning');
+                return;
+            }
+            carrinho[carrinhoId].quantidade = novaQuantidade;
         } else {
             carrinho[carrinhoId] = {
                 ...produto,
                 tamanho,
-                quantidade: 1
+                quantidade: 1,
+                stockDisponivel: produto.Disponivel ? parseInt(produto.Disponivel[0]) : null
             };
         }
         
         atualizarContadorCarrinho();
-        mostrarNotificacao('Produto adicionado ao carrinho!', 'success');
         return;
     }
     
-    // Se não tem tamanho selecionado e tem múltiplos tamanhos
     mostrarNotificacao('Por favor, selecione um tamanho', 'warning');
 }
 
@@ -192,90 +200,105 @@ function atualizarCarrinhoModal() {
     let subtotal = 0;
     cartItems.innerHTML = '';
 
-    const itensNoCarrinho = Object.values(carrinho).length > 0;
-    document.querySelector('button[onclick="enviarPedidoWhatsApp()"]').disabled = !itensNoCarrinho;
+    const itensNoCarrinho = Object.keys(carrinho).length > 0;
     
+    // Atualizar estado dos botões
+    const btnEsvaziar = document.querySelector('button[onclick="esvaziarCarrinho()"]');
+    const btnFinalizar = document.querySelector('button[onclick="enviarPedidoWhatsApp()"]');
+    
+    if (btnEsvaziar) btnEsvaziar.disabled = !itensNoCarrinho;
+    if (btnFinalizar) btnFinalizar.disabled = !itensNoCarrinho;
+
     if (!itensNoCarrinho) {
         cartItems.innerHTML = '<div class="text-center text-muted py-3">Seu carrinho está vazio</div>';
-    } else {
-        Object.entries(carrinho).forEach(([carrinhoId, item]) => {
-            const subtotalItem = item.preco * item.quantidade;
-            cartItems.innerHTML += `
-                <div class="cart-item">
-                    <div>
-                        <h6 class="mb-0">${item.nome}</h6>
-                        ${item.tamanho ? `<small>Tamanho: ${item.tamanho}</small><br>` : ''}
-                        <small class="text-muted">
-                            €${item.preco.toFixed(2)} x ${item.quantidade}
-                            ${item.stockDisponivel ? 
-                                `<span class="text-secondary">(${item.stockDisponivel - item.quantidade} disponíveis)</span>` 
-                                : ''}
-                        </small>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <div class="btn-group btn-group-sm me-2">
-                            <button class="btn btn-outline-secondary" onclick="alterarQuantidade('${carrinhoId}', -1)">-</button>
-                            <button class="btn btn-outline-secondary" disabled>${item.quantidade}</button>
-                            <button class="btn btn-outline-secondary" 
-                                    onclick="alterarQuantidade('${carrinhoId}', 1)"
-                                    ${item.stockDisponivel && item.quantidade >= item.stockDisponivel ? 'disabled' : ''}>+</button>
-                        </div>
-                        <button class="btn btn-danger btn-sm remove-button" onclick="removerDoCarrinho('${carrinhoId}')">
-                            🗑️
-                        </button>
-                    </div>
-                </div>
-            `;
-            subtotal += subtotalItem;
-        });
+        return;
     }
 
-    // Calcular subtotal
-    Object.values(carrinho).forEach(item => {
-        subtotal += item.preco * item.quantidade;
+    // Verificar desconto primeira compra
+    if (usuarioAtual && usuarioAtual.primeiraCompra) {
+        cartItems.innerHTML = `
+            <div class="alert alert-success mb-3">
+                <i class="bi bi-tag-fill"></i>
+                Você tem 5% de desconto na sua primeira compra!
+            </div>
+        `;
+    }
+
+    // Renderizar itens do carrinho
+    Object.entries(carrinho).forEach(([carrinhoId, item]) => {
+        const itemTotal = item.preco * item.quantidade;
+        subtotal += itemTotal;
+        
+        cartItems.innerHTML += `
+            <div class="cart-item">
+                <div>
+                    <h6 class="mb-0">${item.nome}</h6>
+                    ${item.tamanho ? `<small>Tamanho: ${item.tamanho}</small><br>` : ''}
+                    <small class="text-muted">
+                        €${item.preco.toFixed(2)} x ${item.quantidade} = €${itemTotal.toFixed(2)}
+                    </small>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="btn-group btn-group-sm me-2">
+                        <button class="btn btn-outline-secondary" onclick="alterarQuantidade('${carrinhoId}', -1)">-</button>
+                        <button class="btn btn-outline-secondary" disabled>${item.quantidade}</button>
+                        <button class="btn btn-outline-secondary" onclick="alterarQuantidade('${carrinhoId}', 1)">+</button>
+                    </div>
+                    <button class="btn btn-danger btn-sm remove-button" onclick="removerDoCarrinho('${carrinhoId}')">
+                        🗑️
+                    </button>
+                </div>
+            </div>
+        `;
     });
 
-    // Verificar desconto primeira compra
+    // Calcular desconto se aplicável
     let desconto = 0;
     if (usuarioAtual && usuarioAtual.primeiraCompra) {
         desconto = subtotal * DESCONTO_PRIMEIRA_COMPRA;
-        
-        // Adicionar aviso de desconto no topo do carrinho (apenas se não existir)
-        if (!document.querySelector('.alert-success')) {
-            const avisoDesconto = document.createElement('div');
-            avisoDesconto.className = 'alert alert-success mb-3';
-            avisoDesconto.innerHTML = `
-                <i class="bi bi-tag-fill"></i>
-                Você tem 5% de desconto na sua primeira compra!
-            `;
-            cartItems.insertBefore(avisoDesconto, cartItems.firstChild);
-        }
-        
-        // Remover linha de desconto anterior se existir
-        const descontoAnterior = document.querySelector('.desconto-primeira-compra');
-        if (descontoAnterior) {
-            descontoAnterior.remove();
-        }
-        
-        // Adicionar linha de desconto
-        const descontoElement = document.createElement('div');
-        descontoElement.className = 'd-flex justify-content-between text-success desconto-primeira-compra';
-        descontoElement.innerHTML = `
-            <span>Desconto primeira compra (5%):</span>
-            <span>-€${desconto.toFixed(2)}</span>
-        `;
-        
-        const totalElement = document.querySelector('.cart-total .fw-bold');
-        if (totalElement) {
-            totalElement.parentNode.insertBefore(descontoElement, totalElement);
-        }
     }
 
-    // Verificar se a compra é elegível para brinde (acima de 50 euros)
+    // Mostrar resumo do carrinho
+    const cartTotal = document.querySelector('.cart-total');
+    cartTotal.innerHTML = `
+        <div class="d-flex justify-content-between">
+            <span>Subtotal:</span>
+            <span>€${subtotal.toFixed(2)}</span>
+        </div>
+    `;
+
+    // Mostrar desconto se aplicável
+    if (desconto > 0) {
+        cartTotal.innerHTML += `
+            <div class="d-flex justify-content-between text-success">
+                <span>Desconto primeira compra (5%):</span>
+                <span>-€${desconto.toFixed(2)}</span>
+            </div>
+        `;
+    }
+
+    // Adicionar custo do embrulho se selecionado
+    if (giftWrapOption.checked) {
+        cartTotal.innerHTML += `
+            <div class="d-flex justify-content-between">
+                <span>Embrulho para presente:</span>
+                <span>€5.00</span>
+            </div>
+        `;
+    }
+
+    // Calcular e mostrar total final
+    const total = subtotal + (giftWrapOption.checked ? 5 : 0) - desconto;
+    cartTotal.innerHTML += `
+        <div class="d-flex justify-content-between fw-bold">
+            <span>Total:</span>
+            <span>€${total.toFixed(2)}</span>
+        </div>
+    `;
+
+    // Verificar brinde
     if (subtotal >= 50) {
         giftOption.style.display = 'block';
-        
-        // Adicionar listener para o select de brindes se ainda não existir
         if (!giftSelect.hasAttribute('data-listener')) {
             giftSelect.addEventListener('change', function() {
                 brindeEscolhido = this.value;
@@ -288,36 +311,22 @@ function atualizarCarrinhoModal() {
         brindeEscolhido = null;
         giftSelect.value = '';
     }
-
-    // Atualizar subtotal e total
-    document.getElementById('cart-subtotal').textContent = subtotal.toFixed(2);
-    
-    // Calcular total com embrulho e desconto
-    const total = subtotal + (giftWrapOption.checked ? 5 : 0) - desconto;
-    document.getElementById('cart-total').textContent = total.toFixed(2);
-    
-    // Mostrar ou esconder custo do embrulho
-    document.getElementById('gift-wrap-cost').style.display = 
-        giftWrapOption.checked ? 'flex' : 'none';
-    
-    // Atualiza visibilidade da opção de presente e botões
-    document.querySelector('.gift-wrap-option').style.display = itensNoCarrinho ? 'block' : 'none';
-    document.querySelector('button[onclick="esvaziarCarrinho()"]').disabled = !itensNoCarrinho;
-    document.querySelector('button[onclick="enviarPedidoWhatsApp()"]').disabled = !itensNoCarrinho;
 }
 
 function alterarQuantidade(carrinhoId, delta) {
     if (carrinho[carrinhoId]) {
         const novaQuantidade = carrinho[carrinhoId].quantidade + delta;
+        const produto = produtos.find(p => p.id === parseInt(carrinhoId.split('_')[0]));
+        const quantidadeDisponivel = produto.Disponivel ? parseInt(produto.Disponivel[0]) : Infinity;
         
-        if (novaQuantidade > 0 && novaQuantidade <= carrinho[carrinhoId].stockDisponivel) {
+        if (novaQuantidade > 0 && novaQuantidade <= quantidadeDisponivel) {
             carrinho[carrinhoId].quantidade = novaQuantidade;
             atualizarContadorCarrinho();
             atualizarCarrinhoModal();
         } else if (novaQuantidade <= 0) {
             removerDoCarrinho(carrinhoId);
         } else {
-            alert('Quantidade máxima disponível em stock atingida!');
+            mostrarNotificacao('Quantidade máxima disponível em stock atingida!', 'warning');
         }
     }
 }
@@ -331,12 +340,36 @@ function removerDoCarrinho(carrinhoId) {
 function esvaziarCarrinho() {
     carrinho = {};
     brindeEscolhido = null;
-    document.getElementById('giftSelect').value = '';
+    
+    // Resetar select de brinde
+    const giftSelect = document.getElementById('giftSelect');
+    if (giftSelect) {
+        giftSelect.value = '';
+    }
+    
+    // Resetar opção de embrulho
+    const giftWrapOption = document.getElementById('giftWrapOption');
+    if (giftWrapOption) {
+        giftWrapOption.checked = false;
+    }
+    
     atualizarContadorCarrinho();
     atualizarCarrinhoModal();
+    
+    // Fechar modal após esvaziar
+    const modal = document.getElementById('cart-modal');
+    if (modal) {
+        const bsModal = bootstrap.Modal.getInstance(modal);
+        if (bsModal) bsModal.hide();
+    }
 }
 
 function enviarPedidoWhatsApp() {
+    if (Object.keys(carrinho).length === 0) {
+        mostrarNotificacao('Seu carrinho está vazio', 'warning');
+        return;
+    }
+
     let mensagem = "Olá! Gostaria de fazer um pedido:\n\n";
     
     if (usuarioAtual) {
@@ -345,56 +378,65 @@ function enviarPedidoWhatsApp() {
         mensagem += `Telefone: ${usuarioAtual.telefone}\n\n`;
     }
     
+    let subtotal = 0;
+    
     Object.values(carrinho).forEach(item => {
+        const itemTotal = item.preco * item.quantidade;
+        subtotal += itemTotal;
+        
         mensagem += `${item.nome}\n`;
         if (item.tamanho) mensagem += `Tamanho: ${item.tamanho}\n`;
         mensagem += `Quantidade: ${item.quantidade}\n`;
-        mensagem += `Preço: €${(item.preco * item.quantidade).toFixed(2)}\n\n`;
+        mensagem += `Preço unitário: €${item.preco.toFixed(2)}\n`;
+        mensagem += `Subtotal item: €${itemTotal.toFixed(2)}\n\n`;
     });
-
-    const subtotal = Object.values(carrinho)
-        .reduce((total, item) => total + (item.preco * item.quantidade), 0);
     
     mensagem += `Subtotal: €${subtotal.toFixed(2)}\n`;
     
     // Adicionar desconto se for primeira compra
+    let desconto = 0;
     if (usuarioAtual && usuarioAtual.primeiraCompra) {
-        const desconto = subtotal * DESCONTO_PRIMEIRA_COMPRA;
+        desconto = subtotal * DESCONTO_PRIMEIRA_COMPRA;
         mensagem += `Desconto primeira compra (5%): -€${desconto.toFixed(2)}\n`;
-        
-        // Atualizar usuário para marcar que usou o desconto
+    }
+    
+    // Adicionar embrulho para presente se selecionado
+    const giftWrapOption = document.getElementById('giftWrapOption');
+    if (giftWrapOption && giftWrapOption.checked) {
+        mensagem += "Embrulho para presente: €5.00\n";
+    }
+    
+    // Adicionar brinde se elegível e selecionado
+    if (subtotal >= 50 && brindeEscolhido) {
+        const nomeBrinde = brindeEscolhido === 'porta' ? 'Porta Joia' : 'Saquinho de Joia';
+        mensagem += `\nBrinde escolhido: ${nomeBrinde} (Grátis)\n`;
+    }
+    
+    // Calcular total final
+    const total = subtotal + (giftWrapOption.checked ? 5 : 0) - desconto;
+    mensagem += `\nTotal: €${total.toFixed(2)}`;
+    
+    // Codificar mensagem para URL
+    const mensagemCodificada = encodeURIComponent(mensagem);
+    
+    // Abrir WhatsApp em nova aba
+    window.open(`https://wa.me/351923308665?text=${mensagemCodificada}`, '_blank');
+    
+    // Atualizar status de primeira compra
+    if (usuarioAtual && usuarioAtual.primeiraCompra) {
         usuarioAtual.primeiraCompra = false;
+        localStorage.setItem('usuarioAtual', JSON.stringify(usuarioAtual));
         
-        // Atualizar no array de usuários
         const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
         const index = usuarios.findIndex(u => u.email === usuarioAtual.email);
         if (index !== -1) {
             usuarios[index] = usuarioAtual;
             localStorage.setItem('usuarios', JSON.stringify(usuarios));
         }
-        
-        // Atualizar usuário atual no localStorage
-        localStorage.setItem('usuarioAtual', JSON.stringify(usuarioAtual));
     }
     
-    const giftWrapOption = document.getElementById('giftWrapOption');
-    if (giftWrapOption.checked) {
-        mensagem += "Embrulho para presente: €5.00\n";
-    }
-    
-    if (brindeEscolhido) {
-        const nomeBrinde = brindeEscolhido === 'porta' ? 'Porta Joia' : 'Saquinho de Joia';
-        mensagem += `\nBrinde escolhido: ${nomeBrinde}\n`;
-    }
-    
-    const total = subtotal + (giftWrapOption.checked ? 5 : 0);
-    mensagem += `\nTotal: €${total.toFixed(2)}`;
-
-    // Codificar a mensagem para URL
-    const mensagemCodificada = encodeURIComponent(mensagem);
-    
-    // Abrir WhatsApp em nova aba
-    window.open(`https://wa.me/351923308665?text=${mensagemCodificada}`, '_blank');
+    // Limpar carrinho e fechar modal
+    esvaziarCarrinho();
 }
 
 // Adicionar eventos
@@ -669,15 +711,20 @@ function abrirModalImagem(nomeProduto) {
         btnAdicionar.onclick = () => {
             const carrinhoId = `${produto.id}_unico`;
             if (carrinho[carrinhoId]) {
-                carrinho[carrinhoId].quantidade++;
+                const novaQuantidade = carrinho[carrinhoId].quantidade + 1;
+                if (produto.Disponivel && novaQuantidade > parseInt(produto.Disponivel[0])) {
+                    mostrarNotificacao('Quantidade máxima disponível atingida', 'warning');
+                    return;
+                }
+                carrinho[carrinhoId].quantidade = novaQuantidade;
             } else {
                 carrinho[carrinhoId] = {
                     ...produto,
-                    quantidade: 1
+                    quantidade: 1,
+                    stockDisponivel: produto.Disponivel ? parseInt(produto.Disponivel[0]) : null
                 };
             }
             atualizarContadorCarrinho();
-            mostrarNotificacao('Produto adicionado ao carrinho!', 'success');
             modal.hide();
         };
     } else {
@@ -724,17 +771,22 @@ function abrirModalImagem(nomeProduto) {
             
             const carrinhoId = `${produto.id}_${tamanho}`;
             if (carrinho[carrinhoId]) {
-                carrinho[carrinhoId].quantidade++;
+                const novaQuantidade = carrinho[carrinhoId].quantidade + 1;
+                if (produto.Disponivel && novaQuantidade > parseInt(produto.Disponivel[0])) {
+                    mostrarNotificacao('Quantidade máxima disponível atingida', 'warning');
+                    return;
+                }
+                carrinho[carrinhoId].quantidade = novaQuantidade;
             } else {
                 carrinho[carrinhoId] = {
                     ...produto,
                     tamanho,
-                    quantidade: 1
+                    quantidade: 1,
+                    stockDisponivel: produto.Disponivel ? parseInt(produto.Disponivel[0]) : null
                 };
             }
             
             atualizarContadorCarrinho();
-            mostrarNotificacao('Produto adicionado ao carrinho!', 'success');
             modal.hide();
         };
     }
@@ -937,41 +989,34 @@ function cadastrarUsuario(event) {
     usuarioAtual = novoUsuario;
     localStorage.setItem('usuarioAtual', JSON.stringify(usuarioAtual));
     
-    // Enviar notificação via WhatsApp
-    const mensagemAdmin = `🎉 Novo cadastro na Lune Prata!\n\n` +
-        `Nome: ${novoUsuario.nome}\n` +
-        `Email: ${novoUsuario.email}\n` +
-        `Telefone: ${novoUsuario.telefone}\n` +
-        `Data: ${novoUsuario.dataCadastro}`;
-    
-    // Abrir WhatsApp em nova aba para enviar notificação ao admin
-    const mensagemCodificada = encodeURIComponent(mensagemAdmin);
-    window.open(`https://wa.me/351923308665?text=${mensagemCodificada}`, '_blank');
-    
     // Fechar modal
     const modal = bootstrap.Modal.getInstance(document.getElementById('signup-modal'));
     modal.hide();
     
-    // Mostrar mensagem de sucesso
-    mostrarNotificacao('Cadastro realizado com sucesso! Você ganhou 5% de desconto na sua primeira compra.', 'success');
+    // Mostrar mensagem de boas-vindas personalizada
+    const mensagemBoasVindas = `
+        <div style="text-align: center;">
+            <h5>✨ Bem-vindo(a) à Lune Prata, ${novoUsuario.nome.split(' ')[0]}! 🌙</h5>
+            <p>Você ganhou 5% de desconto na sua primeira compra! 🎁</p>
+        </div>
+    `;
+    
+    Toastify({
+        node: createHTMLElement(mensagemBoasVindas),
+        duration: 5000,
+        gravity: "top",
+        position: "center",
+        style: {
+            background: "#198754",
+            borderRadius: "8px",
+            padding: "16px",
+            color: "white",
+            fontSize: "1.1em"
+        }
+    }).showToast();
     
     // Atualizar botões do usuário
     atualizarBotoesUsuario();
-    
-    // Rolar suavemente até a seção de produtos
-    const produtosContainer = document.getElementById('products-container');
-    if (produtosContainer) {
-        produtosContainer.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start'
-        });
-    }
-    
-    // Destacar brevemente a seção de produtos
-    produtosContainer.classList.add('highlight-section');
-    setTimeout(() => {
-        produtosContainer.classList.remove('highlight-section');
-    }, 1500);
 }
 
 // Atualizar função de login
@@ -1015,9 +1060,38 @@ function realizarLogin(event) {
     const modal = bootstrap.Modal.getInstance(document.getElementById('login-modal'));
     modal.hide();
     
-    mostrarNotificacao('Login realizado com sucesso!', 'success');
+    // Mostrar mensagem de boas-vindas personalizada
+    const mensagemBoasVindas = `
+        <div style="text-align: center;">
+            <h5>👋 Bem-vindo(a) de volta, ${usuario.nome.split(' ')[0]}!</h5>
+            ${usuario.primeiraCompra ? 
+                '<p>Você tem 5% de desconto na sua primeira compra!</p>' : 
+                '<p>Ótimo ter você de volta!</p>'
+            }
+        </div>
+    `;
+    
+    Toastify({
+        node: createHTMLElement(mensagemBoasVindas),
+        duration: 4000,
+        gravity: "top",
+        position: "center",
+        style: {
+            background: "#198754",
+            borderRadius: "8px",
+            padding: "16px",
+            color: "white"
+        }
+    }).showToast();
     
     atualizarBotoesUsuario();
+}
+
+// Função auxiliar para criar elemento HTML a partir de string
+function createHTMLElement(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.firstChild;
 }
 
 // Atualizar função que atualiza os botões
@@ -1117,4 +1191,26 @@ function pesquisarProdutos(termoBusca) {
                categoriaNormalizada.includes(termoBuscaNormalizado) ||
                descricaoNormalizada.includes(termoBuscaNormalizado);
     });
+}
+
+// No HTML do modal de cadastro, vamos modificar o input do telefone:
+const signupForm = document.getElementById('signup-form');
+if (signupForm) {
+    const phoneInput = signupForm.querySelector('#signup-phone');
+    phoneInput.setAttribute('type', 'text');
+    phoneInput.setAttribute('maxlength', '9');
+    phoneInput.setAttribute('pattern', '[0-9]{9}');
+    phoneInput.setAttribute('inputmode', 'numeric');
+    phoneInput.removeAttribute('placeholder');
+}
+
+// Fazer o mesmo para o formulário de login
+const loginForm = document.getElementById('login-form');
+if (loginForm) {
+    const phoneInput = loginForm.querySelector('#login-phone');
+    phoneInput.setAttribute('type', 'text');
+    phoneInput.setAttribute('maxlength', '9');
+    phoneInput.setAttribute('pattern', '[0-9]{9}');
+    phoneInput.setAttribute('inputmode', 'numeric');
+    phoneInput.removeAttribute('placeholder');
 } 
